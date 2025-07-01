@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -642,7 +641,7 @@ int32_t ism303dac_mg_data_ovr_get(const stmdev_ctx_t *ctx, uint8_t *val)
 /**
   * @brief  These registers comprise a 3 group of 16-bit number and represent
   *         hard-iron offset in order to compensate environmental effects.
-  *         Data format is the same of output data raw: two’s complement with
+  *         Data format is the same of output data raw: two's complement with
   *         1LSb = 1.5mG. These values act on the magnetic output data value
   *         in order to delete the environmental offset.[set]
   *
@@ -670,7 +669,7 @@ int32_t ism303dac_mg_user_offset_set(const stmdev_ctx_t *ctx, uint16_t *val)
 /**
   * @brief  These registers comprise a 3 group of 16-bit number and represent
   *         hard-iron offset in order to compensate environmental effects.
-  *         Data format is the same of output data raw: two’s complement with
+  *         Data format is the same of output data raw: two's complement with
   *         1LSb = 1.5mG. These values act on the magnetic output data value
   *         in order to delete the environmental offset.[get]
   *
@@ -1093,7 +1092,7 @@ int32_t ism303dac_acceleration_module_raw_get(const stmdev_ctx_t *ctx,
 
 /**
   * @brief  Temperature data output register (r). L and H registers together
-  *         express a 16-bit word in two’s complement.[get]
+  *         express a 16-bit word in two's complement.[get]
   *
   * @param  ctx    read / write interface definitions.(ptr)
   * @param  buff   buffer that stores data read
@@ -1112,7 +1111,7 @@ int32_t ism303dac_xl_temperature_raw_get(const stmdev_ctx_t *ctx,
 
 /**
   * @brief  Linear acceleration output register. The value is expressed as a
-  *         16-bit word in two’s complement.[get]
+  *         16-bit word in two's complement.[get]
   *
   * @param  ctx    read / write interface definitions.(ptr)
   * @param  buff   buffer that stores data read
@@ -2510,7 +2509,7 @@ int32_t ism303dac_mg_int_gen_source_get(const stmdev_ctx_t *ctx,
 
 /**
   * @brief  User-defined threshold value for xl interrupt event on generator.
-  *         Data format is the same of output data raw: two’s complement with
+  *         Data format is the same of output data raw: two's complement with
   *         1LSb = 1.5mG.[set]
   *
   * @param  ctx    read / write interface definitions.(ptr)
@@ -2533,7 +2532,7 @@ int32_t ism303dac_mg_int_gen_threshold_set(const stmdev_ctx_t *ctx,
 
 /**
   * @brief  User-defined threshold value for xl interrupt event on generator.
-  *         Data format is the same of output data raw: two’s complement with
+  *         Data format is the same of output data raw: two's complement with
   *         1LSb = 1.5mG.[get]
   *
   * @param  ctx    read / write interface definitions.(ptr)
@@ -3907,5 +3906,3 @@ int32_t ism303dac_xl_module_sens_get(const stmdev_ctx_t *ctx, uint8_t *val)
   * @}
   *
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
