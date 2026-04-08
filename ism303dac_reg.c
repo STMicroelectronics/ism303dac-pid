@@ -209,7 +209,7 @@ int32_t ism303dac_xl_block_data_update_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl1_a.bdu = val;
+    ctrl1_a.bdu = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL1_A, (uint8_t *)&ctrl1_a, 1);
   }
 
@@ -258,7 +258,7 @@ int32_t ism303dac_mg_block_data_update_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_c_m.bdu = val;
+    cfg_reg_c_m.bdu = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_C_M,
                               (uint8_t *)&cfg_reg_c_m, 1);
   }
@@ -309,7 +309,7 @@ int32_t ism303dac_mg_data_format_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_c_m.ble = (uint8_t)val;
+    cfg_reg_c_m.ble = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_C_M,
                               (uint8_t *)&cfg_reg_c_m, 1);
   }
@@ -374,7 +374,7 @@ int32_t ism303dac_xl_full_scale_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl1_a.fs = (uint8_t)val;
+    ctrl1_a.fs = (uint8_t)val & 0x03U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL1_A, (uint8_t *)&ctrl1_a, 1);
   }
 
@@ -717,12 +717,10 @@ int32_t ism303dac_mg_user_offset_get(const stmdev_ctx_t *ctx, uint16_t *val)
   {
     return ret;
   }
-  val[0] = (int16_t)buff[1];
-  val[0] = (val[0] * 256) + (int16_t)buff[0];
-  val[1] = (int16_t)buff[3];
-  val[1] = (val[1] * 256) + (int16_t)buff[2];
-  val[2] = (int16_t)buff[5];
-  val[2] = (val[2] * 256) + (int16_t)buff[4];
+
+  val[0] = (uint16_t)(buff[0] | ((uint16_t)buff[1] << 8));
+  val[1] = (uint16_t)(buff[2] | ((uint16_t)buff[3] << 8));
+  val[2] = (uint16_t)(buff[4] | ((uint16_t)buff[5] << 8));
 
   return ret;
 }
@@ -746,7 +744,7 @@ int32_t ism303dac_mg_operating_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_a_m.md = (uint8_t)val;
+    cfg_reg_a_m.md = (uint8_t)val & 0x03U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_A_M,
                               (uint8_t *)&cfg_reg_a_m, 1);
   }
@@ -816,7 +814,7 @@ int32_t ism303dac_mg_data_rate_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_a_m.odr = (uint8_t)val;
+    cfg_reg_a_m.odr = (uint8_t)val & 0x03U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_A_M,
                               (uint8_t *)&cfg_reg_a_m, 1);
   }
@@ -890,7 +888,7 @@ int32_t ism303dac_mg_power_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_a_m.lp = (uint8_t)val;
+    cfg_reg_a_m.lp = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_A_M,
                               (uint8_t *)&cfg_reg_a_m, 1);
   }
@@ -956,7 +954,7 @@ int32_t ism303dac_mg_offset_temp_comp_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_a_m.comp_temp_en = val;
+    cfg_reg_a_m.comp_temp_en = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_A_M,
                               (uint8_t *)&cfg_reg_a_m, 1);
   }
@@ -1007,7 +1005,7 @@ int32_t ism303dac_mg_set_rst_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_b_m.set_rst = (uint8_t)val;
+    cfg_reg_b_m.set_rst = (uint8_t)val & 0x03U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_B_M,
                               (uint8_t *)&cfg_reg_b_m, 1);
   }
@@ -1080,7 +1078,7 @@ int32_t ism303dac_mg_set_rst_sensor_single_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_b_m.off_canc_one_shot = val;
+    cfg_reg_b_m.off_canc_one_shot = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_B_M,
                               (uint8_t *)&cfg_reg_b_m, 1);
   }
@@ -1185,12 +1183,9 @@ int32_t ism303dac_acceleration_raw_get(const stmdev_ctx_t *ctx,
     return ret;
   }
 
-  val[0] = (int16_t)buff[1];
-  val[0] = (val[0] * 256) + (int16_t)buff[0];
-  val[1] = (int16_t)buff[3];
-  val[1] = (val[1] * 256) + (int16_t)buff[2];
-  val[2] = (int16_t)buff[5];
-  val[2] = (val[2] * 256) + (int16_t)buff[4];
+  val[0] = (int16_t)(buff[0] | ((uint16_t)buff[1] << 8));
+  val[1] = (int16_t)(buff[2] | ((uint16_t)buff[3] << 8));
+  val[2] = (int16_t)(buff[4] | ((uint16_t)buff[5] << 8));
 
   return ret;
 }
@@ -1214,12 +1209,9 @@ int32_t ism303dac_magnetic_raw_get(const stmdev_ctx_t *ctx, int16_t *val)
     return ret;
   }
 
-  val[0] = (int16_t)buff[1];
-  val[0] = (val[0] * 256) + (int16_t)buff[0];
-  val[1] = (int16_t)buff[3];
-  val[1] = (val[1] * 256) + (int16_t)buff[2];
-  val[2] = (int16_t)buff[5];
-  val[2] = (val[2] * 256) + (int16_t)buff[4];
+  val[0] = (int16_t)(buff[0] | ((uint16_t)buff[1] << 8));
+  val[1] = (int16_t)(buff[2] | ((uint16_t)buff[3] << 8));
+  val[2] = (int16_t)(buff[4] | ((uint16_t)buff[5] << 8));
 
   return ret;
 }
@@ -1289,7 +1281,7 @@ int32_t ism303dac_xl_auto_increment_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl2_a.if_add_inc = val;
+    ctrl2_a.if_add_inc = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL2_A, (uint8_t *)&ctrl2_a, 1);
   }
 
@@ -1338,7 +1330,7 @@ int32_t ism303dac_xl_reset_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl2_a.soft_reset = val;
+    ctrl2_a.soft_reset = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL2_A, (uint8_t *)&ctrl2_a, 1);
   }
 
@@ -1385,7 +1377,7 @@ int32_t ism303dac_mg_reset_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    cfg_reg_a_m.soft_rst = val;
+    cfg_reg_a_m.soft_rst = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_A_M,
                               (uint8_t *)&cfg_reg_a_m, 1);
   }
@@ -1433,7 +1425,7 @@ int32_t ism303dac_xl_boot_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl2_a.boot = val;
+    ctrl2_a.boot = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL2_A, (uint8_t *)&ctrl2_a, 1);
   }
 
@@ -1480,7 +1472,7 @@ int32_t ism303dac_mg_boot_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    cfg_reg_a_m.reboot = val;
+    cfg_reg_a_m.reboot = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_A_M,
                               (uint8_t *)&cfg_reg_a_m, 1);
   }
@@ -1529,7 +1521,7 @@ int32_t ism303dac_xl_self_test_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl3_a.st = (uint8_t)val;
+    ctrl3_a.st = (uint8_t)val & 0x03U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL3_A, (uint8_t *)&ctrl3_a, 1);
   }
 
@@ -1596,7 +1588,7 @@ int32_t ism303dac_mg_self_test_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    cfg_reg_c_m.self_test = val;
+    cfg_reg_c_m.self_test = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_C_M,
                               (uint8_t *)&cfg_reg_c_m, 1);
   }
@@ -1645,7 +1637,7 @@ int32_t ism303dac_xl_data_ready_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl5_a.drdy_pulsed = (uint8_t)val;
+    ctrl5_a.drdy_pulsed = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL5_A, (uint8_t *)&ctrl5_a, 1);
   }
 
@@ -1721,7 +1713,7 @@ int32_t ism303dac_xl_hp_path_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl2_a.fds_slope = (uint8_t)val;
+    ctrl2_a.fds_slope = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL2_A, (uint8_t *)&ctrl2_a, 1);
   }
 
@@ -1785,7 +1777,7 @@ int32_t ism303dac_mg_low_pass_bandwidth_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_b_m.lpf = (uint8_t)val;
+    cfg_reg_b_m.lpf = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_B_M,
                               (uint8_t *)&cfg_reg_b_m, 1);
   }
@@ -1863,7 +1855,7 @@ int32_t ism303dac_xl_spi_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl2_a.sim = (uint8_t)val;
+    ctrl2_a.sim = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL2_A, (uint8_t *)&ctrl2_a, 1);
   }
 
@@ -1926,7 +1918,7 @@ int32_t ism303dac_xl_i2c_interface_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl2_a.i2c_disable = (uint8_t)val;
+    ctrl2_a.i2c_disable = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL2_A, (uint8_t *)&ctrl2_a, 1);
   }
 
@@ -1990,7 +1982,7 @@ int32_t ism303dac_mg_i2c_interface_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_c_m.i2c_dis = (uint8_t)val;
+    cfg_reg_c_m.i2c_dis = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_C_M,
                               (uint8_t *)&cfg_reg_c_m, 1);
   }
@@ -2057,7 +2049,7 @@ int32_t ism303dac_xl_cs_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    fifo_ctrl_a.if_cs_pu_dis = (uint8_t)val;
+    fifo_ctrl_a.if_cs_pu_dis = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_FIFO_CTRL_A,
                               (uint8_t *)&fifo_ctrl_a, 1);
   }
@@ -2135,7 +2127,7 @@ int32_t ism303dac_xl_pin_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl3_a.pp_od = (uint8_t)val;
+    ctrl3_a.pp_od = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL3_A, (uint8_t *)&ctrl3_a, 1);
   }
 
@@ -2198,7 +2190,7 @@ int32_t ism303dac_xl_pin_polarity_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl3_a.h_lactive = (uint8_t)val;
+    ctrl3_a.h_lactive = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL3_A, (uint8_t *)&ctrl3_a, 1);
   }
 
@@ -2261,7 +2253,7 @@ int32_t ism303dac_xl_int_notification_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl3_a.lir = (uint8_t)val;
+    ctrl3_a.lir = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL3_A, (uint8_t *)&ctrl3_a, 1);
   }
 
@@ -2459,7 +2451,7 @@ int32_t ism303dac_xl_all_on_int1_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl5_a.int2_on_int1 = val;
+    ctrl5_a.int2_on_int1 = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL5_A, (uint8_t *)&ctrl5_a, 1);
   }
 
@@ -2506,7 +2498,7 @@ int32_t ism303dac_mg_drdy_on_pin_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    cfg_reg_c_m.int_mag = val;
+    cfg_reg_c_m.int_mag = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_C_M,
                               (uint8_t *)&cfg_reg_c_m, 1);
   }
@@ -2555,7 +2547,7 @@ int32_t ism303dac_mg_int_on_pin_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    cfg_reg_c_m.int_mag_pin = val;
+    cfg_reg_c_m.int_mag_pin = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_C_M,
                               (uint8_t *)&cfg_reg_c_m, 1);
   }
@@ -2685,8 +2677,7 @@ int32_t ism303dac_mg_int_gen_threshold_get(const stmdev_ctx_t *ctx,
   ret = ism303dac_read_reg(ctx, ISM303DAC_INT_THS_L_REG_M, buff, 2);
   if (ret == 0)
   {
-    *val = buff[1];
-    *val = (*val * 256U) +  buff[0];
+    *val = (uint16_t)(buff[0] | ((uint16_t)buff[1] << 8));
   }
 
   return ret;
@@ -2737,7 +2728,7 @@ int32_t ism303dac_mg_offset_int_conf_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    cfg_reg_b_m.int_on_dataoff = (uint8_t)val;
+    cfg_reg_b_m.int_on_dataoff = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CFG_REG_B_M,
                               (uint8_t *)&cfg_reg_b_m, 1);
   }
@@ -2804,7 +2795,7 @@ int32_t ism303dac_xl_wkup_threshold_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    wake_up_ths_a.wu_ths = val;
+    wake_up_ths_a.wu_ths = val & 0x3FU;
     ret = ism303dac_write_reg(ctx, ISM303DAC_WAKE_UP_THS_A,
                               (uint8_t *)&wake_up_ths_a, 1);
   }
@@ -2854,7 +2845,7 @@ int32_t ism303dac_xl_wkup_dur_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    wake_up_dur_a.wu_dur = val;
+    wake_up_dur_a.wu_dur = val & 0x03U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_WAKE_UP_THS_A,
                               (uint8_t *)&wake_up_dur_a, 1);
   }
@@ -2916,7 +2907,7 @@ int32_t ism303dac_xl_sleep_mode_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    wake_up_ths_a.sleep_on = val;
+    wake_up_ths_a.sleep_on = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_WAKE_UP_THS_A,
                               (uint8_t *)&wake_up_ths_a, 1);
   }
@@ -2965,7 +2956,7 @@ int32_t ism303dac_xl_act_sleep_dur_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    wake_up_dur_a.sleep_dur = val;
+    wake_up_dur_a.sleep_dur = val & 0x0FU;
     ret = ism303dac_write_reg(ctx, ISM303DAC_WAKE_UP_DUR_A,
                               (uint8_t *)&wake_up_dur_a, 1);
   }
@@ -3028,7 +3019,7 @@ int32_t ism303dac_xl_tap_detection_on_z_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl3_a.tap_z_en = val;
+    ctrl3_a.tap_z_en = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL3_A, (uint8_t *)&ctrl3_a, 1);
   }
 
@@ -3076,7 +3067,7 @@ int32_t ism303dac_xl_tap_detection_on_y_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl3_a.tap_y_en = val;
+    ctrl3_a.tap_y_en = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL3_A, (uint8_t *)&ctrl3_a, 1);
   }
 
@@ -3124,7 +3115,7 @@ int32_t ism303dac_xl_tap_detection_on_x_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl3_a.tap_x_en = val;
+    ctrl3_a.tap_x_en = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_CTRL3_A, (uint8_t *)&ctrl3_a, 1);
   }
 
@@ -3172,7 +3163,7 @@ int32_t ism303dac_xl_tap_threshold_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    tap_6d_ths_a.tap_ths = val;
+    tap_6d_ths_a.tap_ths = val & 0x1FU;
     ret = ism303dac_write_reg(ctx, ISM303DAC_TAP_6D_THS_A,
                               (uint8_t *)&tap_6d_ths_a, 1);
   }
@@ -3226,7 +3217,7 @@ int32_t ism303dac_xl_tap_shock_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    int_dur_a.shock = val;
+    int_dur_a.shock = val & 0x03U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_INT_DUR_A,
                               (uint8_t *)&int_dur_a, 1);
   }
@@ -3283,7 +3274,7 @@ int32_t ism303dac_xl_tap_quiet_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    int_dur_a.quiet = val;
+    int_dur_a.quiet = val & 0x03U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_INT_DUR_A,
                               (uint8_t *)&int_dur_a, 1);
   }
@@ -3341,7 +3332,7 @@ int32_t ism303dac_xl_tap_dur_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    int_dur_a.lat = val;
+    int_dur_a.lat = val & 0x0FU;
     ret = ism303dac_write_reg(ctx, ISM303DAC_INT_DUR_A,
                               (uint8_t *)&int_dur_a, 1);
   }
@@ -3396,7 +3387,7 @@ int32_t ism303dac_xl_tap_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    wake_up_ths_a.single_double_tap = (uint8_t)val;
+    wake_up_ths_a.single_double_tap = (uint8_t)val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_WAKE_UP_THS_A,
                               (uint8_t *)&wake_up_ths_a, 1);
   }
@@ -3493,7 +3484,7 @@ int32_t ism303dac_xl_6d_threshold_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    tap_6d_ths_a._6d_ths = (uint8_t)val;
+    tap_6d_ths_a._6d_ths = (uint8_t)val & 0x03U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_TAP_6D_THS_A,
                               (uint8_t *)&tap_6d_ths_a, 1);
   }
@@ -3566,7 +3557,7 @@ int32_t ism303dac_xl_4d_mode_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    tap_6d_ths_a._4d_en = val;
+    tap_6d_ths_a._4d_en = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_TAP_6D_THS_A,
                               (uint8_t *)&tap_6d_ths_a, 1);
   }
@@ -3693,7 +3684,7 @@ int32_t ism303dac_xl_ff_dur_get(const stmdev_ctx_t *ctx, uint8_t *val)
 
   if (ret == 0)
   {
-    *val = (wake_up_dur_a.ff_dur << 5) + free_fall_a.ff_dur;
+    *val = (uint8_t)((wake_up_dur_a.ff_dur << 5) | free_fall_a.ff_dur);
   }
 
   return ret;
@@ -3717,7 +3708,7 @@ int32_t ism303dac_xl_ff_threshold_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    free_fall_a.ff_ths = val;
+    free_fall_a.ff_ths = val & 0x07U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_FREE_FALL_A,
                               (uint8_t *)&free_fall_a, 1);
   }
@@ -3780,7 +3771,7 @@ int32_t ism303dac_xl_fifo_xl_module_batch_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    fifo_ctrl_a.module_to_fifo = val;
+    fifo_ctrl_a.module_to_fifo = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_FIFO_CTRL_A,
                               (uint8_t *)&fifo_ctrl_a, 1);
   }
@@ -3832,7 +3823,7 @@ int32_t ism303dac_xl_fifo_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    fifo_ctrl_a.fmode = (uint8_t)val;
+    fifo_ctrl_a.fmode = (uint8_t)val & 0x07U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_FIFO_CTRL_A,
                               (uint8_t *)&fifo_ctrl_a, 1);
   }
@@ -4025,9 +4016,8 @@ int32_t ism303dac_xl_fifo_data_level_get(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    *val = fifo_src_a.diff;
-    *val = *val << 7;
-    *val += fifo_samples_a.diff;
+    *val = (uint16_t)(fifo_samples_a.diff
+            | ((uint16_t)fifo_src_a.diff << 8));
   }
 
   return ret;
@@ -4082,7 +4072,7 @@ int32_t ism303dac_xl_module_sens_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    func_ctrl_a.module_on = val;
+    func_ctrl_a.module_on = val & 0x01U;
     ret = ism303dac_write_reg(ctx, ISM303DAC_FUNC_CTRL_A,
                               (uint8_t *)&func_ctrl_a, 1);
   }
